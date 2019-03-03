@@ -2,13 +2,18 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>About Flask</title>
+    <title>About</title>
   </head>
   <body>
-    {% extends "template.html" %}
-    {% block content %}
-    <h1> About Flask </h1>
-    <p> Flask is a micro web framework written in Python.</p>
-    {% endblock %}
+    <div>
+      {% if results %}
+  <h2>Info</h2>
+  <br>
+  <div>
+      <p>{{results}}</p>
+  </div>
+{% endif %}
+    </div>
+    <p>This should show up</p>
   </body>
 </html>

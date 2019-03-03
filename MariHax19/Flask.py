@@ -1,4 +1,6 @@
 import sys
+import requests
+
 from flask import Flask, request, render_template
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -11,7 +13,7 @@ from bs4 import BeautifulSoup
 #search = search.lower()
 
 # function will take search from site
-def getLoci(search):
+def getLocci(search):
   # seperate search string into multiple strings ex:['Huntingtin', 'disease']
   splitsearch = search.split()
 
@@ -36,14 +38,19 @@ def getLoci(search):
   alltext = soup.get_text()
   if "The following term was not found in Gene:" in alltext:
     print("Erroneous search entry")
+    return "Erroneous search entry"
+    sys.exit()
+  if "No items found." in alltext:
+    print("Erroneous search entry")
+    return "Erroneous search entry"
     sys.exit()
 
-  # get gene link list
+  # get gene links
   linklist = []
   for link in soup.find_all("td", attrs={"class": "gene-name-id"}):
     for a in link.find_all("a", href=True):
       if "/gene/" in a.get('href'):
-        linklist.append(a.get('href')) 
+        linklist.append(a.get('href'))
 
   # get first link ex: "/gene/3064"
   firstlink = linklist[0]
@@ -77,26 +84,39 @@ def getLoci(search):
   locci = locci_box.text
   print (locci)
 
+  #output as text
+  info = name + '$' + dps + '$' + locci
+  return info
+
 app = Flask(__name__)
 
 @app.route('/')
 def my_form():
     return render_template('home.html')
 
-#@app.route('/', methods=['POST'])
-#def my_form_post():
-  #  text = request.form['text']
-   # processed_text = text.lower()
-    #return render_template("about.html", result = getLoci(processed_text))
+""""@app.route('/', methods=['POST'])
+def my_form_post():
+    text = request.form['text']
+    processed_text = text.lower()
+    print(getLoci(processed_text))
+    return processed_text"""
 
-@app.route('/about',methods = ['POST', 'GET'])
+@app.route('/',methods = ['POST', 'GET'])
 def result():
-   if request.method == 'POST':
-      result = request.form
-      return render_template("about.html",result = getLoci(result))
+    errors = []
+    results = {}
+    if request.method == "POST":
+      try:
+        searchEntry = request.form['text']
+      except:
+        errors.append(
+          "Unable to get URL. Please make sure it's valid and try again."
+        )
+      query = searchEntry.lower()
+    return render_template('/home.html', results = getLocci(query))
 
 print("lol")
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-    print(processed_text)

@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask Tutorial</title>
+    <title>DNAted</title>
   </head>
   <body>
     <h1> Get input give my loci</h1>
@@ -11,5 +11,12 @@
         <input name="text">
         <input type="submit">
     </form>
+    {% if results %}
+<h2>Info</h2>
+<br>
+<div>
+    <p>{{results}}</p>
+</div>
+{% endif %}
   </body>
 </html>
