@@ -38,10 +38,12 @@ def getLoci(search):
     print("Erroneous search entry")
     sys.exit()
 
+  # get gene link list
   linklist = []
-  for link in soup.find('table').findAll('a'):
-    if "/gene/" in link.get('href'):
-      linklist.append(link.get('href'))
+  for link in soup.find_all("td", attrs={"class": "gene-name-id"}):
+    for a in link.find_all("a", href=True):
+      if "/gene/" in a.get('href'):
+        linklist.append(a.get('href')) 
 
   # get first link ex: "/gene/3064"
   firstlink = linklist[0]
