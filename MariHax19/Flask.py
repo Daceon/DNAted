@@ -40,10 +40,6 @@ def getLocci(search):
     print("Erroneous search entry")
     return "Erroneous search entry"
     sys.exit()
-  if "No items found." in alltext:
-    print("Erroneous search entry")
-    return "Erroneous search entry"
-    sys.exit()
 
   # get gene links
   linklist = []
@@ -52,6 +48,12 @@ def getLocci(search):
       if "/gene/" in a.get('href'):
         linklist.append(a.get('href'))
 
+  # in case of list that has no result
+  if linklist == []:
+    print("Erroneous search entry")
+    return "Erroneous search entry"
+    sys.exit()
+        
   # get first link ex: "/gene/3064"
   firstlink = linklist[0]
 
